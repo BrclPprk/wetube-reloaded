@@ -157,6 +157,16 @@ export const postUserEdit = async (req, res) => {
   } = req;
   // == const id = req.session.user.id
   // == const { name, email, username, location } = req.body;
+  const exists = await User.exists({
+    $or: [{ username }, { email }],
+    _id: { $ne: _id },
+  });
+  if (exists) {
+    return res.status(400).render("edit-profile", {
+      pageTitle: "Edit Profile",
+      errorMessage: "You cannot use this Username/Email.",
+    });
+  }
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
