@@ -1,3 +1,4 @@
 /node_modules
 /메모
 .env
+/uploads

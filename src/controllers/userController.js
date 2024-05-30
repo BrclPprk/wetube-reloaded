@@ -118,7 +118,6 @@ export const finishGithubLogin = async (req, res) => {
       // set notification
       return res.redirect("/login");
     }
-    console.log(userData);
     let user = await User.findOne({ email: emailObj.email });
     if (!user) {
       user = await User.create({
@@ -151,9 +150,10 @@ export const getUserEdit = (req, res) => {
 export const postUserEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
   // == const id = req.session.user.id
   // == const { name, email, username, location } = req.body;
@@ -170,6 +170,7 @@ export const postUserEdit = async (req, res) => {
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
+      avatarUrl: file ? file.path : avatarUrl,
       name,
       email,
       username,
@@ -181,6 +182,47 @@ export const postUserEdit = async (req, res) => {
   return res.redirect("/users/edit");
 };
 
-export const see = (req, res) => {
-  return res.send("See User");
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPassword2 },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (newPassword !== newPassword2) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Edit Profile",
+      errorMessage: "New password does not match the confirmation.",
+    });
+  }
+  if (!ok) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Edit Profile",
+      errorMessage: "The current password is incorrect",
+    });
+  }
+  user.password = newPassword;
+  await user.save();
+  return res.redirect("/users/logout");
+};
+
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found." });
+  }
+  return res.render("users/profile", {
+    pageTitle: user.username,
+    user,
+  });
 };
