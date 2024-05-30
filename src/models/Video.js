@@ -22,6 +22,9 @@ videoSchema.pre("save", async function () {
 */
 
 videoSchema.static("formatHashtags", function (hashtags) {
+  if (!hashtags) {
+    return null;
+  }
   return hashtags
     .split(",")
     .map((word) => word.trim())
