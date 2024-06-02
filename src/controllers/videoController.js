@@ -1,8 +1,10 @@
 import User from "../models/User";
-import Video from "../models/video";
+import Video from "../models/Video";
 
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort({ createAt: "desc" });
+  const videos = await Video.find({})
+    .sort({ createAt: "desc" })
+    .populate("owner");
   return res.render("home", { pageTitle: "Home", videos: videos });
 };
 
@@ -14,7 +16,7 @@ export const search = async (req, res) => {
       title: {
         $regex: new RegExp(`${keyword}`, "i"),
       },
-    });
+    }).populate("owner");
   }
   return res.render("search", { pageTitle: "Search", videos });
 };

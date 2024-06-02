@@ -1,0 +1,30 @@
+header
+    a(href="/").header__logo
+        .white-bg
+        i.fab.fa-youtube
+    nav 
+        ul 
+            li
+                a(href="/search") Search
+                    i.fas.fa-search
+            if loggedIn
+                if currentPage !== "/videos/upload"
+                    li 
+                        a(href="/videos/upload") Upload Video
+                li 
+                    a(href="/users/edit") Edit Profile
+                li 
+                    a(href="/users/logout") Log out
+                li 
+                    a(href=`/users/${loggedInUser._id}`)
+                        if !loggedInUser.avatarUrl
+                            span 😎
+                        else 
+                            img.header__avatar(src="/" + loggedInUser.avatarUrl, alt="user's avatar image")
+            else 
+                if currentPage !== "/login"
+                    li
+                        a(href="/login") Login
+                if currentPage !== "/join"
+                    li
+                        a(href="/join").header__btn Join
