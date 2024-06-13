@@ -165,9 +165,6 @@ export const deleteComment = async (req, res) => {
     return res.sendStatus(401);
   }
   const video = comment.video;
-  // video.comments = video.comments.filter(
-  //   (commentId) => commentId.toString() !== comment._id.toString()
-  // );
   video.comments.splice(video.comments.indexOf(id), 1);
   await video.save();
   await comment.deleteOne();
