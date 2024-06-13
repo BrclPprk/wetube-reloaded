@@ -17,7 +17,9 @@ const videoControlVolume = videoControls.querySelector(
 const videoControlVolumeBar = videoControls.querySelector(
   ".videoControls__volume-bar"
 );
+const textarea = document.querySelector("#commentForm textarea");
 
+let onFocusForm = false;
 let controlsTimeout = null;
 let controlsMovementTimeout = null;
 let videoPlaying = false;
@@ -133,12 +135,19 @@ const handleVolumeMouseLeave = () => {
   videoControlVolumeBar.classList.remove("showing");
 };
 
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, { method: "POST" });
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeInput);
 volumeRange.addEventListener("change", handleVolumeChange);
 video.addEventListener("loadedmetadata", handleLoadedmetadata);
+video.addEventListener("click", handlePlayClick);
 video.addEventListener("timeupdate", handleTimeUpdate);
+video.addEventListener("ended", handleEnded);
 timeline.addEventListener("input", handleTimelineUpdate);
 timeline.addEventListener("mousedown", videoPuase);
 timeline.addEventListener("mouseup", videoPlay);
@@ -146,13 +155,16 @@ fullScreenBtn.addEventListener("click", handleFullscreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 document.addEventListener("keydown", (event) => {
+  if (onFocusForm) {
+    return;
+  }
   if (event.key === " ") {
     handlePlayClick();
   } else if (event.key === "f" || event.key === "F") {
     handleFullscreen();
-  } else if (event.key === "Escape") {
-    document.exitFullscreen();
   }
 });
 videoControlVolume.addEventListener("mouseenter", handleVolumeMouseEnter);
 videoControlVolume.addEventListener("mouseleave", handleVolumeMouseLeave);
+textarea.addEventListener("focus", () => (onFocusForm = true));
+textarea.addEventListener("blur", () => (onFocusForm = false));

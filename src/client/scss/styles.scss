@@ -17,6 +17,8 @@
 @import "./screens/search";
 @import "./screens/profile";
 @import "./screens/edit-profile";
+@import "./screens/upload";
+@import "./screens/watch";
 
 // Defaults
 a {
@@ -36,4 +38,36 @@ main {
   width: 100%;
   margin: 0 auto;
   margin-top: 50px;
+}
+
+@keyframes goAway {
+  from {
+    transform: none;
+    opacity: 1;
+    display: block;
+  }
+  to {
+    transform: translateY(-50px);
+    opacity: 0;
+    display: none;
+  }
+}
+
+.message {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 200px;
+  padding: 10px 20px;
+  text-align: center;
+  animation: goAway 0.5s ease-in-out forwards 5s;
+  color: white;
+  background-color: forestgreen;
+  border-radius: 500px;
+  &.error {
+    border-radius: 500px;
+    background-color: tomato;
+  }
 }
