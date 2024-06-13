@@ -58,6 +58,18 @@ const handleSubmit = async (event) => {
   }
 };
 
+const handleDelete = async (event) => {
+  const li = event.target.parentElement;
+  const commentId = li.dataset.id;
+  const response = await fetch(`/api/comments/${commentId}`, {
+    method: "DELETE",
+  });
+  if (response.status !== 200) {
+    return alertFlash("error", "Failed to Delete Comment.");
+  }
+  li.remove();
+};
+
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
