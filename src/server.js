@@ -1,10 +1,12 @@
 import express from "express";
 import morgan from "morgan";
 import session from "express-session";
+import flash from "express-flash";
 import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
+import apiRouter from "./routers/apiRouter";
 import { localsMiddleware } from "./middlewares";
 
 const app = express();
@@ -19,7 +21,14 @@ app.use((req, res, next) => {
 
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // 클라에서 보낸 데이터를 파싱하여 req.body에 저장
+app.use(express.json()); // 클라에서 보낸 JSON.stringify()(string으로 변환된 JSON데이터)를 파싱하여 req.body에 저장
+
+app.use((req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
 
 app.use(
   session({
@@ -30,11 +39,13 @@ app.use(
   })
 );
 
+app.use(flash());
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads"));
 app.use("/assets", express.static("assets"));
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
+app.use("/api", apiRouter);
 
 export default app;
