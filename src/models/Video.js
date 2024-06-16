@@ -21,14 +21,6 @@ const videoSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
-/*
-videoSchema.pre("save", async function () {
-  this.hashtags = this.hashtags[0]
-    .split(",")
-    .map((word) => (word.startsWith("#") ? word : `#${word}`));
-});
-*/
-
 videoSchema.static("formatHashtags", function (hashtags) {
   if (!hashtags) {
     return null;

@@ -18,9 +18,9 @@ header
                 li 
                     a(href=`/users/${loggedInUser._id}`)
                         if !loggedInUser.avatarUrl
-                            span 😎
+                            span :)
                         else 
-                            img.header__avatar(src="/" + loggedInUser.avatarUrl, alt="user's avatar image")
+                            img.header__avatar(src=loggedInUser.avatarUrl, alt="user's avatar image")
             else 
                 if currentPage !== "/login"
                     li

@@ -1,3 +1,3 @@
 # Wetube Reloaded
 
-유튜브 고수가 될거야
+im goona GOSU of youtube!

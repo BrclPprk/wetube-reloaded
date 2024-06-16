@@ -35,15 +35,13 @@ const handleDownload = async () => {
   await ffmpeg.exec(["-i", files.input, "-r", "60", files.output]);
 
   await ffmpeg.exec([
-    // 이하 ffmpeg 명령어
-    "-i", // 인풋(열기)
-    files.input, // 열고자 하는 파일
-    "-ss", // 찾는다
-    "00:00:01", // 여기 시간을
-    "-frames:v", // 프레임 스샷
-    "1", // 1장
-    files.thumb, // 결과물 출력
-    // 결과물은 FS에 저장됨
+    "-i",
+    files.input,
+    "-ss",
+    "00:00:01",
+    "-frames:v",
+    "1",
+    files.thumb,
   ]);
 
   const mp4File = await ffmpeg.readFile(files.output);

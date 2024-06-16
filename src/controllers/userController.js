@@ -159,8 +159,6 @@ export const postUserEdit = async (req, res) => {
     body: { name, email, username, location },
     file,
   } = req;
-  // == const id = req.session.user.id
-  // == const { name, email, username, location } = req.body;
   const exists = await User.exists({
     $or: [{ username }, { email }],
     _id: { $ne: _id },
@@ -174,7 +172,7 @@ export const postUserEdit = async (req, res) => {
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
-      avatarUrl: file ? file.path : avatarUrl,
+      avatarUrl: file ? file.location : avatarUrl,
       name,
       email,
       username,

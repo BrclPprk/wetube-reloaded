@@ -21,8 +21,8 @@ app.use((req, res, next) => {
 
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
-app.use(express.urlencoded({ extended: true })); // 클라에서 보낸 데이터를 파싱하여 req.body에 저장
-app.use(express.json()); // 클라에서 보낸 JSON.stringify()(string으로 변환된 JSON데이터)를 파싱하여 req.body에 저장
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use((req, res, next) => {
   res.header("Cross-Origin-Embedder-Policy", "require-corp");
